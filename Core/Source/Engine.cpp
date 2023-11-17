@@ -4,6 +4,8 @@
 #include "OpenGL/Window.h"
 #include "OpenGL/Shader.h"
 #include "OpenGL/Quad.h"
+#include "OpenGL/ResourceManager.h"
+#include "OpenGL/TextRenderer.h"
 
 #include <iostream> // std::bad_alloc
 
@@ -15,6 +17,7 @@ Engine::Engine() {
 	m_pSecondaryWindow = nullptr;
 	m_pQuad = nullptr;
 	m_pSecondQuad = nullptr;
+	m_pTextRenderer = nullptr;
 
 	// Shaders
 	m_pColorGradient = nullptr;
@@ -74,12 +77,22 @@ bool Engine::Init( const char *title, int windowWidth, int windowHeight, int maj
 		return false;
 	}
 
-	//// Initialize and setup shader
-	//m_pColorGradient = new Shader();
-	//m_pColorGradient->CreateFromFile( "Resource/Shaders/BlitColorGradient.shader.glsl" );
-	//m_pColorGradient->BindShader();
-	//m_pColorGradient->SetInt( "u_Texture", 0 );
-	//m_pColorGradient->UnbindShader();
+	// Initialize shaders
+	ResourceManager::LoadShader( "Resource/Shaders/CautionStrips.shader.glsl", "CautionImage" ); // 0. Shader compile error
+
+	ResourceManager::LoadShader( "Resource/Shaders/BlitColorGradient.shader.glsl", "ColorGradient" );
+
+	ResourceManager::LoadShader( "Resource/Shaders/FastBlitTextToScreen.shader.glsl", "FastBlitText" );
+	ResourceManager::GetShader( "FastBlitText" )->SetInteger( "text", 0, true );
+
+	try { m_pTextRenderer = new TextRenderer(); }
+	catch( const std::bad_alloc &e ) {
+		(void)e;
+		TheLogger::Instance()->LogError( (const char *)"*** Text Renderer failed to have memory allocated. ***" );
+		return false;
+	}
+	m_pTextRenderer->Initialize( m_pWindow );
+
 
 	//m_pSecondaryWindow->MakeCurrentContext();
 	//try { m_pSecondQuad = new Quad(); }
@@ -114,8 +127,8 @@ void Engine::Render() {
 	m_pWindow->ClearColorBuffer();
 
 	// Draw to main window
-	//m_pColorGradient->BindShader();
-	//m_pQuad->RenderQuad();
+	ResourceManager::GetShader( "ColorGradient" )->Use();
+	m_pQuad->RenderQuad();
 	//m_pColorGradient->UnbindShader();
 
 	m_pWindow->SwapBuffers();

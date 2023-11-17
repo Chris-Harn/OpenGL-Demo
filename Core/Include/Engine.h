@@ -4,6 +4,7 @@
 class Window;
 class Quad;
 class Shader;
+class TextRenderer;
 
 class Engine {
 public:
@@ -34,6 +35,7 @@ private:
     Window *m_pSecondaryWindow;
     Quad *m_pQuad;
     Quad *m_pSecondQuad;
+    TextRenderer *m_pTextRenderer;
 
     // Shaders
     Shader *m_pColorGradient;

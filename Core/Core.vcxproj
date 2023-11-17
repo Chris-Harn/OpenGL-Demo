@@ -177,6 +177,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\BlitColorGradient.shader.glsl" />
+    <None Include="Resource\Shaders\CautionStrips.shader.glsl" />
+    <None Include="Resource\Shaders\FastBlitTextToScreen.shader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Resource\Font\arial.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
