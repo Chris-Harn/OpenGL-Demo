@@ -1,5 +1,9 @@
-#ifndef __ENGINE__
-#define __ENGINE__
+#ifndef __ENGINE_H__
+#define __ENGINE_H__
+
+class Window;
+class Quad;
+class Shader;
 
 class Engine {
 public:
@@ -22,8 +26,17 @@ private:
 
     static Engine *s_pInstance;
 
-    
+    // Controls
     bool m_bRunning;
+
+    // OpenGL Objects
+    Window *m_pWindow;
+    Window *m_pSecondaryWindow;
+    Quad *m_pQuad;
+    Quad *m_pSecondQuad;
+
+    // Shaders
+    Shader *m_pColorGradient;
 };
 
 typedef Engine TheEngine;
