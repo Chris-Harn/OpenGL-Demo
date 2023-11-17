@@ -1,10 +1,11 @@
 #ifndef __ENGINE_H__
 #define __ENGINE_H__
 
-class Window;
+#include "OpenGL/Window.h"
+#include "OpenGL/TextRenderer.h"
+#include "Timer.h"
 class Quad;
 class Shader;
-class TextRenderer;
 
 class Engine {
 public:
@@ -21,6 +22,13 @@ public:
     void CleanUp();
 
     bool Running();
+
+    // Non-OpenGL Objects
+    Timer *m_pTimer;
+
+    // OpenGL Objects
+    Window *m_pWindow;
+    TextRenderer *m_pTextRenderer;
 private:
     Engine();
     ~Engine() { }
@@ -31,11 +39,9 @@ private:
     bool m_bRunning;
 
     // OpenGL Objects
-    Window *m_pWindow;
     Window *m_pSecondaryWindow;
     Quad *m_pQuad;
     Quad *m_pSecondQuad;
-    TextRenderer *m_pTextRenderer;
 
     // Shaders
     Shader *m_pColorGradient;

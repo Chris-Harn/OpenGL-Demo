@@ -1,17 +1,22 @@
 #include "Engine.h"
 
 #include "Logger.h"
+#include "Timer.h"
 #include "OpenGL/Window.h"
 #include "OpenGL/Shader.h"
 #include "OpenGL/Quad.h"
 #include "OpenGL/ResourceManager.h"
 #include "OpenGL/TextRenderer.h"
+#include "OpenGL/Helper.h"
 
 #include <iostream> // std::bad_alloc
 
 Engine *Engine::s_pInstance = 0;
 
 Engine::Engine() {
+	// Non-OpenGL objects
+	m_pTimer = nullptr;
+
 	// OpenGL objects
 	m_pWindow = nullptr;
 	m_pSecondaryWindow = nullptr;
@@ -79,9 +84,7 @@ bool Engine::Init( const char *title, int windowWidth, int windowHeight, int maj
 
 	// Initialize shaders
 	ResourceManager::LoadShader( "Resource/Shaders/CautionStrips.shader.glsl", "CautionImage" ); // 0. Shader compile error
-
 	ResourceManager::LoadShader( "Resource/Shaders/BlitColorGradient.shader.glsl", "ColorGradient" );
-
 	ResourceManager::LoadShader( "Resource/Shaders/FastBlitTextToScreen.shader.glsl", "FastBlitText" );
 	ResourceManager::GetShader( "FastBlitText" )->SetInteger( "text", 0, true );
 
@@ -92,6 +95,13 @@ bool Engine::Init( const char *title, int windowWidth, int windowHeight, int maj
 		return false;
 	}
 	m_pTextRenderer->Initialize( m_pWindow );
+	try { m_pTimer = new Timer( 60 ); }
+	catch( const std::bad_alloc &e ) {
+		(void)e;
+		TheLogger::Instance()->LogError( (const char *)"*** Timer failed to have memory allocated. ***" );
+		return false;
+	}
+	m_pTimer->Tick();
 
 
 	//m_pSecondaryWindow->MakeCurrentContext();
@@ -113,6 +123,7 @@ bool Engine::Init( const char *title, int windowWidth, int windowHeight, int maj
 }
 
 void Engine::HandleEvents() {
+	m_pTimer->Tick();
 	m_pWindow->PollEvents();
 
 	if( ( m_pWindow->GetsKeys()[256] == true ) ||
@@ -128,8 +139,10 @@ void Engine::Render() {
 
 	// Draw to main window
 	ResourceManager::GetShader( "ColorGradient" )->Use();
+	//ResourceManager::GetShader( "CautionImage" )->Use();
 	m_pQuad->RenderQuad();
-	//m_pColorGradient->UnbindShader();
+
+	DisplayPerformanceInformation();
 
 	m_pWindow->SwapBuffers();
 

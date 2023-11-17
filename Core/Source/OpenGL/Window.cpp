@@ -16,8 +16,8 @@ Window::Window() {
 		m_bKeys[i] = false;
 	}
 
-	m_BufferWidth = 0.0f;
-	m_BufferHeight = 0.0f;
+	m_BufferWidth = 0;
+	m_BufferHeight = 0;
 }
 
 bool Window::Initialization( unsigned int width, unsigned int height, const char *title, unsigned int major, unsigned int minor, int monitor, GLFWwindow *shareContents ) {

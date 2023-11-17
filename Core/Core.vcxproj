@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\OpenGL\Helper.cpp" />
     <ClCompile Include="Source\OpenGL\ResourceManager.cpp" />
     <ClCompile Include="Source\Logger.cpp" />
     <ClCompile Include="Source\OpenGL\Quad.cpp" />
@@ -165,8 +166,10 @@
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\OpenGL\Window.cpp" />
     <ClCompile Include="Source\OpenGL\TextRenderer.cpp" />
+    <ClCompile Include="Source\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\OpenGL\Helper.h" />
     <ClInclude Include="Include\Engine.h" />
     <ClInclude Include="Include\OpenGL\Quad.h" />
     <ClInclude Include="Include\OpenGL\Shader.h" />
@@ -174,6 +177,7 @@
     <ClInclude Include="Include\Logger.h" />
     <ClInclude Include="Include\OpenGL\TextRenderer.h" />
     <ClInclude Include="Include\OpenGL\ResourceManager.h" />
+    <ClInclude Include="Include\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\BlitColorGradient.shader.glsl" />
