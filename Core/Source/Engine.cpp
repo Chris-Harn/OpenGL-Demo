@@ -31,7 +31,7 @@ Engine::Engine() {
 	m_bRunning = false;
 }
 
-bool Engine::Init( const char *title, int windowWidth, int windowHeight, int majorVersionOGL, int minorVersionOGL ) {
+bool Engine::Init( const char *title, int windowWidth, int windowHeight, int targetFps, int majorVersionOGL, int minorVersionOGL ) {
 	/**************** START WINDOW CREATION ***************/
 	try { m_pWindow = new Window(); }
 	catch( const std::bad_alloc &e ) {
@@ -83,7 +83,7 @@ bool Engine::Init( const char *title, int windowWidth, int windowHeight, int maj
 	}
 
 	// Initialize shaders
-	ResourceManager::LoadShader( "Resource/Shaders/CautionStrips.shader.glsl", "CautionImage" ); // 0. Shader compile error
+	ResourceManager::LoadShader( "Resource/Shaders/CautionStrips.shader.glsl", "CautionImage" );
 	ResourceManager::LoadShader( "Resource/Shaders/BlitColorGradient.shader.glsl", "ColorGradient" );
 	ResourceManager::LoadShader( "Resource/Shaders/FastBlitTextToScreen.shader.glsl", "FastBlitText" );
 	ResourceManager::GetShader( "FastBlitText" )->SetInteger( "text", 0, true );
@@ -95,13 +95,14 @@ bool Engine::Init( const char *title, int windowWidth, int windowHeight, int maj
 		return false;
 	}
 	m_pTextRenderer->Initialize( m_pWindow );
-	try { m_pTimer = new Timer( 60 ); }
+	try { m_pTimer = new Timer( targetFps ); }
 	catch( const std::bad_alloc &e ) {
 		(void)e;
 		TheLogger::Instance()->LogError( (const char *)"*** Timer failed to have memory allocated. ***" );
 		return false;
 	}
 	m_pTimer->Tick();
+	m_pTimer->RegulateFPS( true );
 
 
 	//m_pSecondaryWindow->MakeCurrentContext();

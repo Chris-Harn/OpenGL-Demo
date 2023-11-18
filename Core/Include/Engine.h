@@ -16,7 +16,7 @@ public:
         return s_pInstance;
     }
 
-    bool Init( const char *title, int windowWidth, int windowHeight, int majorVersionOGL, int minorVersionOGL );
+    bool Init( const char *title, int windowWidth, int windowHeight, int targetFPS, int majorVersionOGL, int minorVersionOGL );
     void HandleEvents();
     void Render();
     void CleanUp();

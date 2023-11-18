@@ -1,5 +1,7 @@
 #include "OpenGL/ResourceManager.h"
 
+#include "Logger.h"
+
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -20,7 +22,8 @@ Shader *ResourceManager::LoadShader( const char *vShaderFile, const char *fShade
     temp = LoadShaderFromFiles( vShaderFile, fShaderFile, gShaderFile );
 
     if( temp == nullptr ) {
-        printf( "Failed to compile %s.\n", name.c_str() );
+        TheLogger::Instance()->LogError( (const char *)"*** Failed to compile %s. ***", name.c_str() );
+        //printf( "Failed to compile %s.\n", name.c_str() );
         return m_Shaders[name] = new Shader( *m_Shaders["CautionImage"] );
     }
 
@@ -40,7 +43,8 @@ Shader *ResourceManager::LoadShader( const char *ShaderFile, std::string name ) 
     temp = LoadShaderFromFile( ShaderFile );
 
     if( temp == nullptr ) {
-        printf( "Failed to compile %s.\n", name.c_str() );
+        TheLogger::Instance()->LogError( (const char *)"*** Failed to compile %s. ***", name.c_str() );
+        //printf( "Failed to compile %s.\n", name.c_str() );
         return m_Shaders[name] = new Shader( *m_Shaders["CautionImage"] );
     }
 
@@ -99,6 +103,7 @@ Shader *ResourceManager::LoadShaderFromFiles( const char *vShaderFile, const cha
 
     Shader *shader = new Shader();
     if( shader->Compile( vShaderCode, fShaderCode ) == false ) {
+        TheLogger::Instance()->LogError( (const char *)"*** Failed to compile shader inside Resource Manager. Multiple shader files. ***" );
         return nullptr;
     }
     return shader;
@@ -133,13 +138,14 @@ Shader *ResourceManager::LoadShaderFromFile( const char *shaderFile ) {
                 }
                 else {
                     // Error state, return null
-                    std::cout << "Didn't recieve shader type." << std::endl;
+                    TheLogger::Instance()->LogError( (const char *)"*** Attempting to read shader, but no shader type detected. ***" );
+                    return nullptr;
                 }
             }
         }
     }
     catch( std::exception e ) {
-        printf( "ERROR::SHADER: Failed to read shader files.\n" );
+        TheLogger::Instance()->LogError( (const char *)"*** Failed to read shader file. ***" );
     }
     std::string vertexCode = ss[(int)ShaderType::VERTEX].str();
     std::string fragmentCode = ss[(int)ShaderType::FRAGMENT].str();
@@ -151,6 +157,7 @@ Shader *ResourceManager::LoadShaderFromFile( const char *shaderFile ) {
 
     Shader *shader = new Shader();
     if( shader->Compile( vShaderCode, fShaderCode ) == false ) {
+        TheLogger::Instance()->LogError( (const char *)"*** Failed to compile shader inside Resource Manager. Single shader file. ***" );
         return nullptr;
     }
     return shader;
