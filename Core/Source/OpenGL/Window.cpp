@@ -257,5 +257,4 @@ void Window::HandleKeys( GLFWwindow *window,
 			#endif
 		}
 	}
-
 }

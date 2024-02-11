@@ -7,8 +7,7 @@ Timer::Timer( int targetFPS ) {
     m_fps = 0;
     m_bRegulateFPS = false;
 
-    // Why multiplying by 2? I don't know, but it makes the fps the correct target
-    m_frameDuration = std::chrono::milliseconds( int( 1000.0f / ( m_targetFPS * 2.0f ) ) );
+    m_frameDuration = std::chrono::milliseconds( int( 1000.0f / m_targetFPS ) );
     m_lastFrameTime = std::chrono::high_resolution_clock::now();
     m_lastSecondTime = m_lastFrameTime;
 }
@@ -30,7 +29,11 @@ void Timer::Tick() {
         m_lastSecondTime = now;
     }
     if( m_bRegulateFPS == true ) {
-        std::this_thread::sleep_for( m_frameDuration - ( now - m_lastFrameTime ) );
+        // Adjust sleep time to maintain desired frame rate
+        auto sleepTime = m_frameDuration - ( now - m_lastFrameTime );
+        if( sleepTime > std::chrono::milliseconds( 0 ) ) {
+            std::this_thread::sleep_for( sleepTime );
+        }
     }
 }
 
